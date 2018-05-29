@@ -1,0 +1,22 @@
+version: 0.1
+   
+environment_variables:
+  plaintext:
+    BUCKET_NAME: "test.abbybangser.com"
+    JEKYLL_ENV: "production"
+    CONFIG_FILE: "_config.yml"
+phases:
+  install:
+    commands:
+      - gem install jekyll jekyll-paginate
+      - echo "******** installed jekyll ********"
+      - jekyll -v
+  build:
+    commands:
+      - echo "******** Building Jekyll site ********"
+      - jekyll build --config $CONFIG_FILE
+  post_build:
+    commands:
+      - echo "******** Uploading to S3 ********"
+      - aws s3 sync _site/ s3://$BUCKET_NAME --cache-control="max-age=86400" --exclude "*.html" --exclude "*.xml" --acl public-read
+      - aws s3 sync _site/ s3://$BUCKET_NAME --cache-control="max-age=600" --exclude "*" --include "*.html" --include "*.xml" --acl public-read
