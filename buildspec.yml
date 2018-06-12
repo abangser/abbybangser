@@ -9,7 +9,6 @@ phases:
   install:
     commands:
       - bundle install
-      - gem install jekyll jekyll-paginate
       - echo "******** installed jekyll ********"
       - jekyll -v
   build:
